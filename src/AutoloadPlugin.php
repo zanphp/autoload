@@ -13,8 +13,8 @@ class AutoloadPlugin implements PluginInterface
      */
     public function activate(Composer $composer, IOInterface $io)
     {
-        var_dump("XXX");
-//        $autoloadGenerator = new Autoload\DoctrineAutoloadGenerator($composer->getEventDispatcher(), $io);
-//        $composer->setAutoloadGenerator($autoloadGenerator);
+        echo "Rewrite autoload.php\n";
+        $autoloadGenerator = new StaticInitializerAutoloadGenerator($composer->getEventDispatcher(), $io);
+        $composer->setAutoloadGenerator($autoloadGenerator);
     }
 }
