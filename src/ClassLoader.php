@@ -327,10 +327,8 @@ class ClassLoader
                 $method = static::STATIC_INITIALIZER_METHOD_NAME;
                 if (is_subclass_of($class, StaticInitializerInterface::class)) {
                     call_user_func("$class::$method");
-                }
-
-                // 不能使用  is_callable, 因为 __call __callStatic !
-                if (method_exists($class, $method)) {
+                } else if (method_exists($class, $method)) {
+                    // 不能使用  is_callable, 因为 __call __callStatic !
                     if ((new \ReflectionMethod($class, $method))->isStatic()) {
                         call_user_func("$class::$method");
                     }
