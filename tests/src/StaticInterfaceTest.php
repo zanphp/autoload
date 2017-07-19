@@ -3,9 +3,9 @@
 namespace  ZanPHP\Autoload\Tests;
 
 
-use Composer\Autoload\StaticInitializerInterface;
+use Composer\Autoload\StaticInitializer;
 
-class StaticInterfaceTest implements StaticInitializerInterface
+class StaticInterfaceTest implements StaticInitializer
 {
     public static function __static()
     {

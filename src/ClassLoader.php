@@ -458,7 +458,7 @@ function includeFile($file)
     include $file;
 }
 
-interface StaticInitializerInterface
+interface StaticInitializer
 {
     public static function __static();
 }
