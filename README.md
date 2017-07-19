@@ -1,8 +1,21 @@
 # autoload
 
-## composer 插件, 支持静态初值化；
+## composer 插件, 模拟静态初值化
 
-!! 注意，静态初值化必须类必须经过composer加载, 自行require、include功能失效; 
+```php
+<?php
+
+interface StaticInitializerInterface
+{
+    public static function __static();
+}
+```
+
+!! 注意，静态初值化的须类必须经过composer加载.
+ 
+ 类加载时, `public static function __static()` 方法会自动执行, 必须无参数, 必须为静态方法
+
+自行require、include功能失效; 
 
 
 ## 使用
@@ -17,11 +30,12 @@ composer.json 引入 zanphp/autoload package
 }
 ```
 
-类加载时, public static function __static() 方法会自动执行, 必须无参数, 必须为静态方法
+### 可选接口实现
 
 ```php
 <?php
 
+namespace  ZanPHP\Autoload\Tests;
 
 class StaticTest
 {
@@ -37,6 +51,8 @@ class StaticTest
 ```php
 <?php
 
+namespace  ZanPHP\Autoload\Tests;
+
 use Composer\Autoload\StaticInitializerInterface;
 
 class StaticInterfaceTest implements StaticInitializerInterface
@@ -46,4 +62,27 @@ class StaticInterfaceTest implements StaticInitializerInterface
         echo __CLASS__ . " initialized\n";
     }
 }
+```
+
+
+### test
+
+```php
+<?php
+
+require __DIR__ . "/vendor/autoload.php";
+
+
+class_exists(\ZanPHP\Autoload\Tests\StaticTest::class, true);
+
+class_exists(\ZanPHP\Autoload\Tests\StaticInterfaceTest::class, true);
+
+```
+
+### output
+
+```text
+ZanPHP\Autoload\Tests\StaticTest initialized
+ZanPHP\Autoload\Tests\StaticInterfaceTest initialized
+
 ```
