@@ -7,6 +7,7 @@ use Composer\Config;
 use Composer\Installer\InstallationManager;
 use Composer\Package\PackageInterface;
 use Composer\Repository\InstalledRepositoryInterface;
+use Composer\Util\Filesystem;
 
 class StaticInitializerAutoloadGenerator extends AutoloadGenerator
 {
@@ -69,6 +70,17 @@ AUTOLOAD;
     public function dump(Config $config, InstalledRepositoryInterface $localRepo, PackageInterface $mainPackage, InstallationManager $installationManager, $targetDir, $scanPsr0Packages = false, $suffix = '')
     {
         parent::dump($config, $localRepo, $mainPackage, $installationManager, $targetDir, $scanPsr0Packages, $suffix);
+
+        $filesystem = new Filesystem();
+        $filesystem->ensureDirectoryExists($config->get('vendor-dir'));
+        // Do not remove double realpath() calls.
+        // Fixes failing Windows realpath() implementation.
+        // See https://bugs.php.net/bug.php?id=72738
+        $basePath = $filesystem->normalizePath(realpath(realpath(getcwd())));
+        $vendorPath = $filesystem->normalizePath(realpath(realpath($config->get('vendor-dir'))));
+        $targetDir = $vendorPath.'/'.$targetDir;
+        $filesystem->ensureDirectoryExists($targetDir);
+
         $this->safeCopy(__DIR__.'/ClassLoader.php', $targetDir.'/ClassLoader.php');
     }
 }
